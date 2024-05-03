@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buscar Producto por Código</title>
+<script src="jquery-3.7.1.js"></script>
+</head>
+<body>
+    <input type="text" id="codigo-input" placeholder="Introduce el código del producto">
+    <button id="buscar-btn">Buscar</button>
+    <div id="imagen-container"></div>
+
+    <script>
+      $(document).ready(function() {
+            $('#buscar-btn').click(function() {
+                var codigo = $('#codigo-input').val().trim();
+                if (codigo === '') {
+                    alert('Por favor, introduce el código del producto.');
+                    return;
+                }
+
+                // URL de la API de Open Food Facts para buscar productos por código
+                var apiUrl = 'https://world.openfoodfacts.org/api/v0/product/' + codigo + '.json';
+
+                // Realizar la solicitud GET a la API
+                $.get(apiUrl)
+                    .done(function(data) {
+                        // Verificar si se encontraron resultados
+                        if (data.status === 1) {
+                            // Obtener la URL de la imagen
+                            var imagenUrl = data.product.image_front_thumb_url;
+                            // Mostrar la imagen en la página
+                            mostrarImagen(imagenUrl);
+                        } else {
+                            console.log('No se encontraron resultados para el código proporcionado.');
+                        }
+                    })
+                    .fail(function(error) {
+                        console.error('Hubo un error al procesar la solicitud:', error);
+                    });
+            });
+        });
+
+        // Función para mostrar la imagen del producto en la página
+        function mostrarImagen(url) {
+            // Crear un elemento de imagen
+            var imagen = $('<img>').attr('src', url);
+
+            // Limpiar el contenedor de imágenes anterior (si existe)
+            $('#imagen-container').empty();
+
+            // Agregar la imagen al contenedor
+            $('#imagen-container').append(imagen);
+        }
+    </script>
+</body>
+</html>
+
+
+    <!--<script src="index.js" type="module"></script>
+    <script src="jquery-3.7.1.js"></script>-->
