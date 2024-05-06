@@ -71,7 +71,12 @@ button, a {
     margin-right: 10px;
     margin-top: 20px;
 }
-
+.material-symbols-sharp {
+    cursor: pointer;
+    position: absolute;
+    margin-top: 10px;
+    margin-left: -30px;
+}
 .contenedor-aplicar {
     position: absolute;
     border: 1px solid black;
@@ -215,6 +220,7 @@ input[type='radio']:checked:after {
     opacity: 1;
 }
 
+
 .contenedor_buscador svg {
     margin-left: 15px;
     vertical-align: sub;
@@ -292,10 +298,9 @@ input:checked+.slider:before {
 }
 
 .zoom {
-    cursor: wait;
+    cursor: zoom-in;
     display: flex;
     flex-direction: row;
-
 }
 
 .modal {
@@ -426,7 +431,7 @@ strong {
 .heart {
     display: flex;
     justify-content: right;
-    
+    z-index: 999;
 }
 
 .fa-regular {
@@ -509,7 +514,7 @@ strong {
 }
 
 #producto_lista,
-#producto_favoritos {
+#contenedor_favoritos {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -541,6 +546,7 @@ strong {
     max-height: 140px;
     object-fit: contain;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 
