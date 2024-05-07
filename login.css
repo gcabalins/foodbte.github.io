@@ -15,6 +15,89 @@ button, a {
     -webkit-tap-highlight-color: transparent;
     
 }
+.fa-chevron-down{
+    float: right;
+}
+.comida {
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: left;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto; 
+    max-width: 600px;
+  }
+  
+  .comida h2 {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .comida img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .comida p {
+    margin-bottom: 10px;
+  }
+  .comida h4 {
+    font-weight: bold;
+   
+  }
+  
+  .comida ul {
+    list-style:square;
+    padding: 0;
+    margin-left: 17px;
+  }
+  
+  .comida ul li {
+    margin-bottom: 5px;
+  }
+  
+  .comida a {
+    display: block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #ffc007;
+  }
+  
+  .comida a:hover {
+    text-decoration: underline;
+  }
+  
+.comida-simple {
+    display: inline-block;
+    width: 200px;
+    margin: 10px; 
+    text-align: center;
+    background-color: white;
+    border-radius: 0px 0px 5px 5px;
+    overflow: hidden; 
+  }
+  
+  .comida-simple a {
+    font-size: 1.2em; 
+    margin-bottom: 5px;
+    text-decoration: none;
+    color: #000;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    position: relative;
+  }
+  
+
+  
+  .comida-simple img {
+    width: 100%;
+    height: auto;
+  }
 .contenido_modal .close {
     float: right;
 }
@@ -221,14 +304,14 @@ input[type='radio']:checked:after {
 }
 
 
-.contenedor_buscador svg {
+.contenedor_buscador svg ,.contenedor_buscador_recetas svg {
     margin-left: 15px;
     vertical-align: sub;
     transition: 0.2s ease;
     transform-origin: center;
 }
 
-.contenedor_buscador svg:hover {
+.contenedor_buscador svg:hover,.contenedor_buscador_recetas svg:hover {
     cursor: pointer;
     transform: scale(1.2);
 }
@@ -356,7 +439,7 @@ input:checked+.slider:before {
     border-radius: 10px;
 }
 
-.map-wrapper {
+#contenedor_map {
     height: 400px;
     width: 100%;
 }
@@ -398,12 +481,18 @@ strong {
 
 .nombre_producto p {
     margin: 10px;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 .nombre_producto a {
     text-decoration: none;
     color: black;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
 
 }
 
@@ -411,7 +500,7 @@ strong {
     color: #ffc007;
 }
 
-.boton_pedido,#botonCancelarPedido,#botonConfirmarPedido {
+.boton_pedido,#botonCancelarPedido,#botonConfirmarPedido,.boton_receta_aleatoria {
     background-color: #ffc007;
     border: none;
     color: white;
@@ -421,23 +510,26 @@ strong {
     cursor: pointer;
     border-radius: 8px;
 }
-.boton_pedido:hover,#botonCancelarPedido:hover,#botonConfirmarPedido:hover {
+.boton_pedido:hover,#botonCancelarPedido:hover,#botonConfirmarPedido:hover,.boton_receta_aleatoria:hover {
     background-color: #ff9900;
 }
-#botonCancelarPedido,#botonConfirmarPedido {
+#botonCancelarPedido,#botonConfirmarPedido,.boton_receta_aleatoria {
     border: #b0b0b0 1px solid;
     margin: 2px;
 }
+.boton_receta_aleatoria {
+    padding: 5px;
+}
 .heart {
-    display: flex;
     justify-content: right;
-    z-index: 999;
+    z-index: 99;
+    top: 10px;
+    right: 30px;
+    position: absolute;
 }
 
 .fa-regular {
     color: rgb(111, 115, 139);
-    width: 20px;
-    height: 20px;
     transition: color 0.5s ease;
 }
 
@@ -480,7 +572,7 @@ strong {
     animation: pulse 1s ease;
 }
 
-.contenedor_buscador {
+.contenedor_buscador,.contenedor_buscador_recetas {
     display: flex;
     padding: 5px;
     justify-content: center;
@@ -490,7 +582,7 @@ strong {
 
 }
 
-.contenedor_buscador input {
+.contenedor_buscador input,.contenedor_buscador_recetas input {
     width: 500px;
     height: 39.3px;
     padding: 0 20px;
@@ -549,7 +641,9 @@ strong {
     cursor: pointer;
 }
 
-
+.fa-search {
+    cursor: pointer;
+}
 .producto_lista:hover {
     border: 2px solid #ffc007;
     transform: scale(1.02);
@@ -858,13 +952,49 @@ a {
         transform: scale(0.9);
         top: -30px;
     }
+    .comida-simple {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid #d0cfcf;
+        padding-bottom: 10px;
+        background-color: #E7E7E7;
+        width: calc(100% - 20px);
+        border-radius: 0px;
+      }
+      .comida{
+        max-width: 350px;
+      }
+      
+      .comida-simple img {
+        width: 100px;
+        height: auto;
+      }
+      
+      .comida-simple .titulo {
+        flex-grow: 1;
+        text-align: right;
+      }
+      
+      .comida-simple a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+      }
+      
+      .comida-simple a:hover {
+        text-decoration: underline;
+      }
+      .comida-simple a:hover {
+        text-decoration: underline; /* Subrayado al pasar el cursor sobre el enlace */
+      }
 
-    .contenedor_buscador input {
+    .contenedor_buscador input ,.contenedor_buscador_recetas input{
         width: 350px;
 
     }
 
-    .contenedor_buscador {
+    .contenedor_buscador,.contenedor_buscador_recetas {
         display: flex;
         flex-direction: column;
 
@@ -902,6 +1032,7 @@ a {
         border-radius: 25% 25% 25% 25%;
         background-color: #ffc007;
         transition: transform 0.3s ease;
+        
     }
 
     .icono {
@@ -910,6 +1041,7 @@ a {
         z-index: 1;
         transition: 0.3s ease;
         transform-origin: center;
+        cursor:pointer;
     }
 
     .icono.open {
@@ -989,7 +1121,7 @@ a {
         display: none;
     }
 
-    .contenedor_buscador {
+    .contenedor_buscador ,.contenedor_buscador_recetas{
         margin-top: 1px;
     }
 

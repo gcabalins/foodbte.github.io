@@ -5,7 +5,7 @@ $(function () {
     //pagina de incio
     $('#contenedor').children().hide();
 
-    $('#contenedor_productos').show();
+    $('#contenedor_recetas').show();
     $('.overlay').hide();
     crearTexto();
     crearCampo();
@@ -23,6 +23,7 @@ $(function () {
     crearPaginacion();
     crearMensajes();
     crearMap();
+    crearRecetas();
 
 
     function crearIndex() {
@@ -37,17 +38,44 @@ $(function () {
             "<div id='contenedor_index' class='contenedor_index'>Inicio</div>" +
             "<div id='contenedor_productos' class='contenedor_productos'></div>" +
             "<div id='contenedor_favoritos' class='contenedor_favoritos'></div>" +
-            "<div id='contenedor_map'></div>");
+            "<div id='contenedor_map'></div>" +
+            "<div id='contenedor_recetas' class='contenedor_recetas'></div>");
 
     }
     function crearPaginacion() {
         $("#contenedor_productos").append("<div id='pagination'><div id='pagination_contenedor'></div></div>");
     }
+    function crearRecetas() {
+
+        $("#contenedor_recetas").append("<div class='contenedor_buscador_recetas'>" +
+            "<div class='search'>" +
+            "<input type='text' id='buscador_recetas' placeholder='Introduce el nombre del alimento'>" +
+            "<i  id='lupa_receta'class='fas fa-search icon ' ></i>" +
+            "</div>" +
+            "</div>");
+
+        $("#contenedor_recetas").append("<div id='loadingIcon' style='display: none;'>" +
+            "<div class='cube-wrapper'>" +
+            "<div class='cube-folding'>" +
+            "<span class='leaf1'></span>" +
+            "<span class='leaf2'></span>" +
+            "<span class='leaf3'></span>" +
+            "<span class='leaf4'></span>" +
+            "</div>" +
+            "</div>" +
+            "</div>");
+
+        $("#contenedor_recetas").append("<div id='receta_aleatoria'>" +
+            "<button class='boton_receta_aleatoria'>Receta aleatoria</button>" +
+            "</div>");
+      
+    }
+
     function crearBuscador() {
         $("#contenedor_productos").append("<div class='contenedor_buscador'>" +
             "<div class='search'>" +
             "<input type='text' id='buscador' placeholder='Introduce el nombre del producto'>" +
-            "<i class='fas fa-search icon' ></i>" +
+            "<i  id='lupa_producto' class='fas fa-search icon' ></i>" +
             "</div>" +
             "</div>");
         $(".contenedor_buscador").append("<div class='filter-buttons'>" +
@@ -89,6 +117,7 @@ $(function () {
             "<a  id='login' href='#'><i class='fa fa-fw fa-user'></i>Login</a>" +
             "<a  id='favoritos' href='#'><i class='fa fa-fw fa-heart'></i>Favoritos</a>" +
             "<a  id='map' href='#'><i class='fa fa-fw fa-map'></i>Map</a>" +
+            "<a  id='recetas' href='#'><i class='fa fa-fw fa-cutlery'></i>Recetas</a>" +
             "</div>");
 
     }
@@ -111,21 +140,25 @@ $(function () {
             "<li><a class='dropdown-item' id='login' href='#'>Login</a></li>" +
             "<li><a class='dropdown-item' id='crearcuenta' href='#'> Crear  Cuenta</a></li>" +
             "<li><a class='dropdown-item' id='favoritos' href='#'>Favoritos</a></li>" +
+            "<li><a  id='map' href='#'><i class='fa fa-fw fa-map'></i>Map</a></li>" +
+            "<li><a  id='recetas' href='#'><i class='fa fa-fw fa-cutlery'></i>Recetas</a></li>" +
             "</ul>" +
             "</div>");
     }
     function crearMap() {
-        $("#contenedor_map").append("<div class='map-wrapper'>" +
+        $("#contenedor_map").append("<div id='map-wrapper'>" +
             "</div>");
     }
 
     function crearOverlay() {
         $(".overlay").append("<div class='menu-links'>" +
-            "<a id='index' href='#'>Inicio</a>" +
-            "<a  id='productos' href='#'>Productos</a>" +
-            "<a  id='login'href='#'>Login</a>" +
-            "<a id='crearcuenta' href='#'>Crear Cuenta</a>" +
-            "<a  id='favoritos'href='#'>Favoritos</a>" +
+            "<a id='index' href='#'><i class='fa fa-fw fa-home'></i>Inicio</a>" +
+            "<a  id='productos' href='#'><i class='fa fa-fw fa-search'></i>Productos</a>" +
+            "<a id='crearcuenta' href='#'><i class='fa fa-fw fa-envelope'></i>Crear Cuenta</a>" +
+            "<a  id='login' href='#'><i class='fa fa-fw fa-user'></i>Login</a>" +
+            "<a  id='favoritos' href='#'><i class='fa fa-fw fa-heart'></i>Favoritos</a>" +
+            "<a  id='map' href='#'><i class='fa fa-fw fa-map'></i>Map</a>" +
+            "<a  id='recetas' href='#'><i class='fa fa-fw fa-cutlery'></i>Recetas</a>" +
             "</div>");
     }
 
@@ -273,15 +306,15 @@ $(function () {
         }, function (res) {
             console.log("Respuesta del servidor: ", res);
             if (res.mensaje === "Conexion exitosa") {
-                
+
                 mostrarMensajeSuccess("Se ha conectado exitosamente");
                 rememberMe(usuario, contrasena);
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#contenedor').children().hide();
                 }, 1000);
-            
+
                 // Se muestra #contenedor_productos después de un retraso de 2 segundos
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#contenedor_productos').show();
                 }, 1000);
             } else {
@@ -322,16 +355,16 @@ $(function () {
             if (res.mensaje === "Cuenta creada exitosamente") {
                 //window.location.href = "https://20bananas.com/";
                 mostrarMensajeSuccess("Se ha creado la cuenta");
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#contenedor').children().hide();
                 }, 1000);
-            
+
                 // Se muestra #contenedor_productos después de un retraso de 2 segundos
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#contenedor_productos').show();
                 }, 1000);
 
-                
+
             } else {
                 mostrarMensajeError("Error al crear la cuenta");
                 $('#usernameCuenta').val("");
@@ -371,15 +404,15 @@ $(function () {
             if (res.mensaje === "Contraseña cambiada exitosamente") {
                 //window.location.href = "https://20bananas.com/";
                 mostrarMensajeSuccess("Se ha cambiado la contraseña");
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#contenedor').children().hide();
                 }, 1000);
-            
+
                 // Se muestra #contenedor_productos después de un retraso de 2 segundos
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#contenedor_productos').show();
                 }, 1000);
-                
+
             } else {
                 mostrarMensajeError("Error al cambiar la contraseña");
                 $('#usernameChange').val("");
@@ -453,6 +486,10 @@ $(function () {
     $(document).on('click', '#favoritos', function () {
         $('#contenedor').children().hide();
         $('#contenedor_favoritos').show();
+    });
+    $(document).on('click', '#recetas', function () {
+        $('#contenedor').children().hide();
+        $('#contenedor_recetas').show();
     });
     $(document).on('click', '#index', function () {
         $('#contenedor').children().hide();

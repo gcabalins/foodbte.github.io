@@ -76,7 +76,7 @@ $(function () {
     $('#favoritos').on('click', mostrarFavoritos);
     $('#productos').on('click', mostrarFavoritos);
     $('#pagination').hide();
-    $('.fas.fa-search').on('click', function () {
+    $('#lupa_producto').on('click', function () {
         buscarProducto();
     });
     localStorage.setItem('selectedCategoria', '');
@@ -252,8 +252,8 @@ $(function () {
                 const selectedSoja = localStorage.getItem('selectedSoja') || '';
                 const selectedAditivo = localStorage.getItem('selectedAditivo') || 'indifferent';
                 const selectedAceitePalma = localStorage.getItem('selectedAceitePalma') || 'indifferent';
-                const selectedNueces = localStorage.setItem('selectedNueces') || '';
-                const selectedMarisco = localStorage.setItem('selectedMarisco') || '';
+                const selectedNueces = localStorage.getItem('selectedNueces') || '';
+                const selectedMarisco = localStorage.getItem('selectedMarisco') || '';
 
                 apiUrl += '&tagtype_0=countries&tag_contains_0=contains&tag_0=' + selectedPais;
                 apiUrl += '&tagtype_1=categories&tag_contains_1=contains&tag_1=' + selectedCategoria;
@@ -423,50 +423,26 @@ $(function () {
         });
     }
     
-    function mostrarProducto(nombre, urlImagen, idProducto, cantidad, envase, marcas, categoria) {
-        // Verificar que la imagen no sea nula
-        if (urlImagen === null) {
-            console.error("La imagen de producto es nula");
-            return;
-        }
-        
-        // Crear la imagen
+    function mostrarProducto(nombre, urlImagen, idProducto, cantidad, envase, marcas, categoria) {    
         var imagen = $('<img>').attr('src', urlImagen).addClass('imagen_producto');
         var divImagen = $('<div>').append(imagen).addClass('imagen_producto');
-    
-        // Verificar que el nombre del producto no sea nulo
-        if (nombre === null) {
-            console.error("El nombre del producto es nulo");
-            return;
-        }
-        
-        // Crear el elemento con el nombre del producto
-        var nombreElemento = $('<div>').append('<a href="#">' + nombre + '</a>').addClass('nombre_producto');
+        var nombreElemento = $('<div>').append('<a href="#" title="' + nombre + '">' + nombre + '</a>').addClass('nombre_producto');
         var boton = $('<button>').append('<p>Hacer pedido</p>').addClass('boton_pedido');
         var productoContainer = $('<div>').addClass('producto_lista');
-    
-        // Evento click para el botón de hacer pedido
         boton.on('click', function() {
             crearVentanaModal();
             $('#ventanaPedido').fadeIn(100);
         });
-    
-        // Parsear el objeto de productos favoritos JSON
         var likedProducts = JSON.parse(localStorage.getItem("likedProducts")) || {};
-    
-        // Verificar si el producto está marcado como favorito
-        var heart = $('<i>').addClass('fa-heart fa-2x');
+        var heart = $('<i>').addClass('fa-heart ');
         if (likedProducts[idProducto]) {
             heart.addClass('fa-solid');
         } else {
             heart.addClass('fa-regular');
         }
-    
         heart.on("click", function () {
             var likedProducts = JSON.parse(localStorage.getItem("likedProducts")) || {};
-    
             var isLiked = likedProducts[idProducto];
-    
             if (isLiked) {
                 delete likedProducts[idProducto];
                 $(this).removeClass('fa-solid').addClass('fa-regular');
@@ -487,10 +463,26 @@ $(function () {
         nombreElemento.append(divHeart);
         nombreElemento.append(boton);
     
-        var botonAumentar = $('<button>').text('+').addClass('boton_cantidad');
-        var botonDisminuir = $('<button>').text('-').addClass('boton_cantidad');
         var divBotones = $('<div>').addClass('div_botones_cantidad');
         var cantidadDePedidos = 0;
+    
+        agregarBotonesCantidad(divBotones, cantidadDePedidos);
+    
+        productoContainer.append(divImagen, nombreElemento, divBotones);
+        $('#producto_lista').append(productoContainer);
+        divImagen.on('click', function () {
+            mostrarDetalleProducto(nombre, urlImagen, idProducto, envase, marcas, categoria, cantidad);
+            zoom(urlImagen);
+        });
+        nombreElemento.find('a').on('click', function () {
+            mostrarDetalleProducto(nombre, urlImagen, idProducto, envase, marcas, categoria, cantidad);
+            zoom(urlImagen);
+        });
+    }
+    
+    function agregarBotonesCantidad(divBotones, cantidadDePedidos) {
+        var botonAumentar = $('<button>').text('+').addClass('boton_cantidad');
+        var botonDisminuir = $('<button>').text('-').addClass('boton_cantidad');
     
         botonAumentar.on('click', function() {
             if (cantidadDePedidos > 9) {
@@ -517,18 +509,7 @@ $(function () {
     
         var cantidadElemento = $('<div>').addClass('cantidad_producto').text('Cantidad: ' + cantidadDePedidos);
         divBotones.append(cantidadElemento, botonDisminuir, botonAumentar);
-        productoContainer.append(divImagen, nombreElemento, divBotones);
-        $('#producto_lista').append(productoContainer);
-        divImagen.on('click', function () {
-            mostrarDetalleProducto(nombre, urlImagen, idProducto, envase, marcas, categoria, cantidad);
-            zoom(urlImagen);
-        });
-        nombreElemento.find('a').on('click', function () {
-            mostrarDetalleProducto(nombre, urlImagen, idProducto, envase, marcas, categoria, cantidad);
-            zoom(urlImagen);
-        });
     }
-    
     
     function mostrarFavoritos() {
         var likedProducts = JSON.parse(localStorage.getItem("likedProducts")) || {};
@@ -543,8 +524,8 @@ $(function () {
                 var imagen = $('<img>').attr('src', producto.urlImagen);
                 var boton = $('<button>').append('<p>Hacer pedido</p>').addClass('boton_pedido');
                 var divImagen = $('<div>').append(imagen).addClass('imagen_producto');
-                var nombreProductoElemento = $('<div>').text(producto.nombre).addClass('nombre_producto');
-                var heart = $('<i>').addClass('fa-heart fa-2x fa-solid');
+                var nombreProductoElemento = $('<div>').attr('title',producto.nombre).text(producto.nombre).addClass('nombre_producto');
+                var heart = $('<i>').addClass('fa-heart fa-solid');
     
                 heart.on('click', function () {
                     // Si el producto ya está marcado como favorito, eliminarlo de la lista
@@ -561,39 +542,16 @@ $(function () {
                         }
                     }
                 });
-                var botonAumentar = $('<button>').text('+').addClass('boton_cantidad');
-                var botonDisminuir = $('<button>').text('-').addClass('boton_cantidad');
+    
                 var divBotones = $('<div>').addClass('div_botones_cantidad');
                 var cantidadDePedidos = 0;
-            
-                botonAumentar.on('click', function() {
-                    if (cantidadDePedidos > 9) {
-                        mostrarCantidad();
-                    }else{
-                    cantidadDePedidos++;
-                    mostrarCantidad();
-                }
-                });
-            
-                botonDisminuir.on('click', function() {
-                    // Verificar que la cantidad no sea menor que 1
-                    if (cantidadDePedidos >= 1) {
-                        // Disminuir la cantidad
-                        cantidadDePedidos--;
-                        // Actualizar la visualización de la cantidad
-                        mostrarCantidad();
-                    }
-                });
-                function mostrarCantidad() {
-                    cantidadElemento.text('Cantidad: ' + cantidadDePedidos);
-                }
-            
-                var cantidadElemento = $('<div>').addClass('cantidad_producto').text('Cantidad: ' + cantidadDePedidos);
-                divBotones.append(cantidadElemento, botonDisminuir,botonAumentar);
+    
+                agregarBotonesCantidad(divBotones, cantidadDePedidos);
+    
                 var divHeart = $('<div>').append(heart).addClass('heart');
                 nombreProductoElemento.append(divHeart);
                 nombreProductoElemento.append(boton);
-                productoFavorito.append(divImagen, nombreProductoElemento,divBotones);
+                productoFavorito.append(divImagen, nombreProductoElemento, divBotones);
                 $('#contenedor_favoritos').append(productoFavorito);
             });
         }
